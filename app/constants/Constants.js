@@ -1,0 +1,7 @@
+var constants = {
+  LOAD_CATEGORY_LIST: "LOAD_CATEGORY_LIST",
+  LOAD_CATEGORY_CONTENT: "LOAD_CATEGORY_CONTENT",
+  LOAD_STORY_DATA: "LOAD_STORY_DATA"
+};
+
+module.exports = constants;
