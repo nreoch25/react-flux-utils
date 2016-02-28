@@ -1,44 +1,33 @@
-import React from "react";
+import React, { Component } from "react";
 import { Link } from 'react-router';
+import { Container } from "flux/utils";
 
-import ContentActions from '../../actions/ContentActions';
-import ContentStore from '../../stores/ContentStore';
+import ContentActionCreators from "../../actions/ContentActionCreators";
+import ContentStore from "../../stores/ContentStore";
 
-export default class ContentList extends React.Component{
+class ContentList extends Component{
 
-  constructor() {
-    super();
-    this.onContentChange = this.onContentChange.bind(this);
-  }
-
-  initContent(section) {
-    ContentStore.addChangeListener(this.onContentChange);
-    ContentActions.getContentItems(section);
+  initContent() {
+    ContentActionCreators.fetchContent(this.section);
   }
 
   componentWillReceiveProps(nextProps) {
     this.section = nextProps.route.section;
-    this.initContent(this.section);
+    this.initContent();
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.section = this.props.route.section;
-    this.initContent(this.section);
-  }
-
-  onContentChange() {
-    ContentStore.removeChangeListener(this.onContentChange);
-    this.stories = ContentStore.all();
-    this.forceUpdate();
+    this.initContent();
   }
 
   getStories() {
-    if(typeof this.stories === "undefined") {
+    if(typeof this.state.content === "undefined") {
       return;
     } else {
       let curStories = [];
       let pathSection = this.section.toLowerCase();
-      this.stories.map(function(story) {
+      this.state.content.map(function(story) {
         curStories.push(
           <Link key={story.id} to={`/${pathSection}/${story.sourceId}`}>{story.title}</Link>
         );
@@ -56,3 +45,10 @@ export default class ContentList extends React.Component{
       );
   }
 }
+
+ContentList.getStores = () => ([ContentStore]);
+ContentList.calculateState = (prevState) => ({
+  content: ContentStore.getState()
+});
+
+export default Container.create(ContentList);

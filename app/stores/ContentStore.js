@@ -1,10 +1,22 @@
-var constants = require('../constants/Constants');
-var Store = require('./Store');
+import AppDispatcher from "../dispatcher/AppDispatcher";
+import Constants from "../constants/Constants";
+import { ReduceStore } from "flux/utils";
 
-var ContentStore = module.exports = Store.extend({
+class ContentStore extends ReduceStore {
 
-  init: function() {
-    this.bind(constants.LOAD_CATEGORY_CONTENT, this.set);
-    this.bind(constants.LOAD_STORY_DATA, this.set);
+  getInitialState() {
+    return []
   }
-});
+
+  reduce(state, action) {
+    switch(action.type) {
+      case Constants.FETCH_CONTENT_SUCCESS:
+        return action.payload.response;
+      default:
+        return state;
+    }
+  }
+
+}
+
+export default new ContentStore(AppDispatcher);
