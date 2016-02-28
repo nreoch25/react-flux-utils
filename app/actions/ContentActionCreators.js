@@ -10,6 +10,14 @@ let ContentActionCreators = {
       success: Constants.FETCH_CONTENT_SUCCESS,
       failure: Constants.FETCH_CONTENT_ERROR
     });
+  },
+
+  fetchArticle(id) {
+    AppDispatcher.dispatchAsync(ContentAPI.fetchArticle(id), {
+      request: Constants.FETCH_ARTICLE,
+      success: Constants.FETCH_ARTICLE_SUCCESS,
+      failure: Constants.FETCH_ARTICLE_ERROR
+    });
   }
 
 };

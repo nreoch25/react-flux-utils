@@ -12,28 +12,26 @@ class ContentList extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    this.section = nextProps.route.section;
+    this.section = nextProps.route.section.toLowerCase();
     this.initContent();
   }
 
-  componentWillMount() {
-    this.section = this.props.route.section;
+  componentDidMount() {
+    this.section = this.props.route.section.toLowerCase();
     this.initContent();
   }
 
   getStories() {
-    if(typeof this.state.content === "undefined") {
-      return;
-    } else {
-      let curStories = [];
-      let pathSection = this.section.toLowerCase();
-      this.state.content.map(function(story) {
-        curStories.push(
-          <Link key={story.id} to={`/${pathSection}/${story.sourceId}`}>{story.title}</Link>
-        );
-      });
-      return curStories;
-    }
+    if(this.state.content.length === 0) { return <div>Loading...</div>; }
+    let curStories = [];
+    let pathSection = this.section;
+    this.state.content.map(function(story) {
+      curStories.push(
+        <Link key={story.id} to={`/${pathSection}/${story.sourceId}`}>{story.title}</Link>
+      );
+    });
+    return curStories;
+
   }
 
   render() {

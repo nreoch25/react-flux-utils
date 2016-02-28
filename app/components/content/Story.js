@@ -1,39 +1,27 @@
-import React from "react";
-import ContentStore from '../../stores/ContentStore';
-import ContentActions from '../../actions/ContentActions';
+import React, { Component } from "react";
+import ContentActionCreators from "../../actions/ContentActionCreators";
+import ArticleStore from "../../stores/ArticleStore";
+import { Container } from "flux/utils";
 
-export default class Story extends React.Component{
-
-  constructor() {
-    super();
-    this.onContentChange = this.onContentChange.bind(this);
-    this.state = { content: { headline: '', summary: '' } };
-  }
+class Story extends Component {
 
   componentDidMount() {
-    ContentStore.addChangeListener(this.onContentChange);
-    ContentActions.getStoryItem(this.props.params.id);
-  }
-
-  onContentChange() {
-    ContentStore.removeChangeListener(this.onContentChange);
-    let storyContent = ContentStore.all();
-    console.log(storyContent);
-    this.setState({
-      content: {
-        headline: storyContent.headline,
-        summary: storyContent.summary
-      }
-    });
-    
+    ContentActionCreators.fetchArticle(this.props.params.id);
   }
 
   render() {
     return (
       <div>
-      <h3>{this.state.content.headline}</h3>
-      <p>{this.state.content.summary}</p>
+      <h3>{this.state.article.headline}</h3>
+      <p>{this.state.article.summary}</p>
       </div>
     );
   }
 }
+
+Story.getStores = () => ([ArticleStore]);
+Story.calculateState = (prevState) => ({
+  article: ArticleStore.getState()
+});
+
+export default Container.create(Story);
